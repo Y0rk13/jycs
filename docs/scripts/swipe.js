@@ -3,6 +3,15 @@ let current = 0;
 
 const track = document.getElementById('track');
 
+function goTo(i) {
+    if (i < 0 || i >= SECTION_COUNT) return;
+    current = i;
+    track.style.transform = `translateX(-${i * 100}vw)`;
+    document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === i);
+    });
+}
+
 /* keyboard — left / right arrow keys */
 document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') goTo(current + 1);
