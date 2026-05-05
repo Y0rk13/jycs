@@ -1,0 +1,110 @@
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-h);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 1.5rem;
+    background: rgba(200, 200, 200, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 54px;
+    background: none;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* icon */
+.nav-btn svg {
+    width: 22px;
+    height: 22px;
+    stroke: rgba(143, 163, 184, 1);
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s, transform 0.2s;
+}
+
+.nav-btn.active svg {
+    stroke: rgba(150, 150, 150, 0.85);
+    transform: scale(1.12);
+}
+
+/* active indicator dot */
+.nav-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+    margin-top: 5px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.nav-btn.active .nav-dot {
+    background: rgba(150, 150, 150, 0.85);
+    transform: scale(1.2);
+}
+
+/* active bar */
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 2px;
+    width: 0;
+    background: rgba(150, 150, 150, 0.85);
+    border-radius: 2px 2px 0 0;
+    transition: width 0.3s;
+}
+
+.nav-btn.active::after {
+    width: 30px;
+}
+
+/* hover label */
+.nav-label {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: rgba(0, 0, 0, 0.88);
+    background: rgba(200, 200, 200, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.nav-btn:hover .nav-label {
+    opacity: 1;
+}
