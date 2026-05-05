@@ -1,0 +1,51 @@
+/* RESET */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* LAYOUT VARIABLES */
+:root {
+    --nav-h: 64px;
+    --slide-duration: 0.65s;
+    --slide-easing: cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+/* BASE */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* HORIZONTAL SCROLL TRACK */
+.scroll-track {
+    display: flex;
+    width: 500vw;        /* 5 sections * 100vw */
+    height: 100vh;
+    will-change: transform;
+    transition: transform var(--slide-duration) var(--slide-easing);
+}
+
+/* SECTIONS */
+.section {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    padding: 3rem 6vw calc(var(--nav-h) + 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .section {
+        padding: 2.5rem 5vw calc(var(--nav-h) + 1.5rem);
+    }
+
+    .nav-btn {
+        width: 54px;
+    }
+}
