@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/style.css" />
+</head>
+<body>
+
+<div class="scroll-track" id="track">
+
+    <section class="section" id="s-home">
+        <h1>Home</h1>
+        <p>Intro / hero content goes here.</p>
+    </section>
+
+    <section class="section" id="s-resume">
+        <h2>Resume</h2>
+        <p>Achievements and PDF download go here.</p>
+    </section>
+
+    <section class="section" id="s-about">
+        <h2>About Me</h2>
+        <p>Bio, photo, interests go here.</p>
+    </section>
+
+    <section class="section" id="s-projects">
+        <h2>Projects</h2>
+        <p>Project cards go here.</p>
+    </section>
+
+    <section class="section" id="s-contact">
+        <h2>Contact</h2>
+        <p>Links, email, socials go here.</p>
+    </section>
+
+</div>
+
+<nav class="bottom-nav" aria-label="Main navigation">
+
+    <button class="nav-btn active" id="nb-0" onclick="goTo(0)" aria-label="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+        </svg>
+        <span class="nav-label">Home</span>
+    </button>
+
+    <button class="nav-btn" id="nb-1" onclick="goTo(1)" aria-label="Resume">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+            <line x1="8" y1="8" x2="16" y2="8"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+            <line x1="8" y1="16" x2="12" y2="16"/>
+        </svg>
+        <span class="nav-label">Resume</span>
+    </button>
+
+    <button class="nav-btn" id="nb-2" onclick="goTo(2)" aria-label="About Me">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span class="nav-label">About</span>
+    </button>
+
+    <button class="nav-btn" id="nb-3" onclick="goTo(3)" aria-label="Projects">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+            <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+            <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+            <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+        </svg>
+        <span class="nav-label">Projects</span>
+    </button>
+
+    <button class="nav-btn" id="nb-4" onclick="goTo(4)" aria-label="Contact">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-label">Contact</span>
+    </button>
+
+</nav>
+
+<script src="scripts/swipe.js"></script>
+
+</body>
+</html>
