@@ -10,6 +10,8 @@ function goTo(i) {
     document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
         btn.classList.toggle('active', idx === i);
     });
+    // raise wave amplitude for active section
+    if (window.setWaveAmplitude) window.setWaveAmplitude(i);
 }
 
 /* keyboard — left / right arrow keys */
