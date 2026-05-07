@@ -7,7 +7,7 @@
 
 /* LAYOUT VARIABLES */
 :root {
-    --nav-h: 64px;
+    --nav-h: 128px;
     --slide-duration: 0.65s;
     --slide-easing: cubic-bezier(0.77, 0, 0.18, 1);
 }
