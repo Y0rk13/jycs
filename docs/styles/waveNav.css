@@ -42,11 +42,11 @@
 }
 
 /* back layer — darkest, most transparent */
-.wave-svg-1 { fill: rgba(100, 100, 100, 0.20); }
+.wave-svg-1 { fill: rgba(255, 0, 0, 1); }
 /* mid layer */
-.wave-svg-2 { fill: rgba(120, 120, 120, 0.35); }
+.wave-svg-2 { fill: rgba(0, 255, 0, 1); }
 /* front layer — most opaque */
-.wave-svg-3 { fill: rgba(150, 150, 150, 0.60); }
+.wave-svg-3 { fill: rgba(0, 0, 255, 1); }
 
 /* button wrapper sits above wave */
 .nav-buttons {
