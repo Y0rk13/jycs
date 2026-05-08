@@ -64,7 +64,7 @@
 
     /* draw all three layers, applying individual movement offsets */
     function drawWave(peakX, crestY, timestamp) {
-        const offsets = [14, 7, 0]; // depth — layer 1 sits furthest back
+        const offsets = [0, 7, 14]; // depth — layer 1 sits furthest back
         for (let i = 1; i <= 3; i++) {
             const path = document.getElementById(`wave-path-${i}`);
             if (!path) continue;
