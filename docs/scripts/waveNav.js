@@ -17,21 +17,22 @@
        breath.period     : full vertical cycle ms
        breath.phase      : vertical phase offset ms
        
-       drift.speed       : horizontal viewBox units per second
-       drift.direction   : 1 = left, -1 = right */
+       drift.amplitude   : horizontal px oscillation
+       drift.period      : full horizontal cycle ms
+       drift.phase       : horizontal phase offset ms */
 
     const IDLE = [
         {
             breath: { amplitude: 3.5, period: 4200, phase: 0    },
-            drift:  { speed: 12,  direction:  1 },   // back — slowest, drifts right→left
+            drift:  { amplitude: 30,  period: 8000, phase: 0    },   // back — slowest
         },
         {
             breath: { amplitude: 2.5, period: 5100, phase: 1400 },
-            drift:  { speed: 20, direction: -1 },   // mid — medium, drifts left→right
+            drift:  { amplitude: 40,  period: 9500, phase: 1500 },   // mid — medium
         },
         {
             breath: { amplitude: 2.0, period: 3700, phase: 2600 },
-            drift:  { speed: 30,  direction:  1 },   // front — fastest, drifts right→left
+            drift:  { amplitude: 50,  period: 11000, phase: 3000 },  // front — fastest
         },
     ];
 
@@ -45,10 +46,7 @@
     let animStart     = null;
     let travelling    = false;
     let rafId         = null;
-    let lastTimestamp = null;
 
-    /* per-layer drift accumulator in viewBox units */
-    const driftX = [0, 0, 0];
 
     /*  build wave path 
        driftOffset shifts the entire wave shape horizontally,
@@ -92,7 +90,7 @@
     }
 
     /*  draw all three layers  */
-    function drawWave(peakX, crestY, timestamp, delta) {
+    function drawWave(peakX, crestY, timestamp) {
         const layerOffsets = [0, 7, 14];
 
         for (let i = 1; i <= 3; i++) {
@@ -109,24 +107,22 @@
                 );
             }
 
-            // horizontal drift, accumulate over time
-            if (delta !== undefined) {
-                driftX[i - 1] += idle.drift.speed * idle.drift.direction * (delta / 1000);
-                // wrap so it doesn't grow forever
-                driftX[i - 1] = driftX[i - 1] % 200;
+            // horizontal drift
+            let driftOffset = 0;
+            if (timestamp !== undefined) {
+                driftOffset = idle.drift.amplitude * Math.sin(
+                    (2 * Math.PI * ((timestamp + idle.drift.phase) % idle.drift.period)) / idle.drift.period
+                );
             }
 
             path.setAttribute('d',
-                buildWavePath(peakX, crestY, 1000, layerOffsets[i - 1], breathOffset, driftX[i - 1])
+                buildWavePath(peakX, crestY, 1000, layerOffsets[i - 1], breathOffset, driftOffset)
             );
         }
     }
 
     /* main RAF loop */
     function loop(timestamp) {
-        const delta = lastTimestamp !== null ? timestamp - lastTimestamp : 0;
-        lastTimestamp = timestamp;
-
         if (travelling) {
             if (!animStart) animStart = timestamp;
             const elapsed  = timestamp - animStart;
@@ -139,7 +135,7 @@
             if (progress >= 1) travelling = false;
         }
 
-        drawWave(currentPeakX, currentCrestY, timestamp, delta);
+        drawWave(currentPeakX, currentCrestY, timestamp);
         rafId = requestAnimationFrame(loop);
     }
 
