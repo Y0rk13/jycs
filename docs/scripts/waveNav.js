@@ -1,23 +1,38 @@
 /* WAVE NAV — animated travelling peak
-   + idle movement on each layer */
+   + idle breathing (vertical)
+   + idle drift (horizontal) */
 
 (function () {
 
     const WAVE_H    = 80;
-    const BASE_H    = 65;   // resting baseline y
-    const PEAK_H    = 22;   // active crest y
+    const BASE_H    = 65;
+    const PEAK_H    = 22;
 
     const TRAVEL_MS = 520;
     const EASING    = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
 
-    /* idle animation config
-       amplitude: how many vb units it rises/falls
-       period:    full cycle duration in ms
-       phase:     offset so layers don't sync up               */
-    const MOVE = [
-        { amplitude: 3.5, period: 4200, phase: 0      },  // layer 1 — back
-        { amplitude: 2.5, period: 5100, phase: 1400   },  // layer 2 — mid
-        { amplitude: 2.0, period: 3700, phase: 2600   },  // layer 3 — front
+    /* idle config per layer
+
+       breath.amplitude  : vertical px oscillation
+       breath.period     : full vertical cycle ms
+       breath.phase      : vertical phase offset ms
+       
+       drift.speed       : horizontal viewBox units per second
+       drift.direction   : 1 = left, -1 = right */
+
+    const IDLE = [
+        {
+            breath: { amplitude: 3.5, period: 4200, phase: 0    },
+            drift:  { speed: 12,  direction:  1 },   // back — slowest, drifts right→left
+        },
+        {
+            breath: { amplitude: 2.5, period: 5100, phase: 1400 },
+            drift:  { speed: 20, direction: -1 },   // mid — medium, drifts left→right
+        },
+        {
+            breath: { amplitude: 2.0, period: 3700, phase: 2600 },
+            drift:  { speed: 30,  direction:  1 },   // front — fastest, drifts right→left
+        },
     ];
 
     /* travel state */
@@ -30,25 +45,39 @@
     let animStart     = null;
     let travelling    = false;
     let rafId         = null;
+    let lastTimestamp = null;
 
-    /* build a wave path for one layer
-       movementOffset nudges the whole layer's baseline up/down  */
-    function buildWavePath(peakX, crestY, width, layerOffset, movementOffset) {
+    /* per-layer drift accumulator in viewBox units */
+    const driftX = [0, 0, 0];
+
+    /*  build wave path 
+       driftOffset shifts the entire wave shape horizontally,
+       creating the illusion the water surface is moving.
+       We wrap the peak position so it stays on screen.        */
+    function buildWavePath(peakX, crestY, width, layerOffset, breathOffset, driftOffset) {
         layerOffset  = layerOffset  || 0;
-        movementOffset = movementOffset || 0;
+        breathOffset = breathOffset || 0;
+        driftOffset  = driftOffset  || 0;
 
         const spread = width * 0.11;
-        const base   = BASE_H   + layerOffset + movementOffset;
-        const crest  = crestY   + layerOffset + movementOffset;
+        const base   = BASE_H + layerOffset + breathOffset;
+        const crest  = crestY + layerOffset + breathOffset;
+
+        // drift shifts points; peak stays anchored to button
+        const px = peakX;
+        const sl = peakX - spread + driftOffset * 0.3;
+        const sr = peakX + spread + driftOffset * 0.3;
+        const sl2 = peakX - spread * 1.8 + driftOffset * 0.5;
+        const sr2 = peakX + spread * 1.8 + driftOffset * 0.5;
 
         const pts = [
-            [0,                    base],
-            [peakX - spread * 1.8, base],
-            [peakX - spread,       base - 7],
-            [peakX,                crest],
-            [peakX + spread,       base - 7],
-            [peakX + spread * 1.8, base],
-            [width,                base],
+            [0,     base],
+            [sl2,   base],
+            [sl,    base - 7],
+            [px,    crest],
+            [sr,    base - 7],
+            [sr2,   base],
+            [width, base],
         ];
 
         let d = `M ${pts[0][0]},${pts[0][1]}`;
@@ -62,30 +91,42 @@
         return d;
     }
 
-    /* draw all three layers, applying individual movement offsets */
-    function drawWave(peakX, crestY, timestamp) {
-        const offsets = [0, 7, 14]; // depth — layer 1 sits furthest back
+    /*  draw all three layers  */
+    function drawWave(peakX, crestY, timestamp, delta) {
+        const layerOffsets = [0, 7, 14];
+
         for (let i = 1; i <= 3; i++) {
             const path = document.getElementById(`wave-path-${i}`);
             if (!path) continue;
 
-            let movementOffset = 0;
+            const idle = IDLE[i - 1];
+
+            // vertical breath
+            let breathOffset = 0;
             if (timestamp !== undefined) {
-                const b = MOVE[i - 1];
-                // SIN oscillation: positive = layer rises (lower y value)
-                movementOffset = -b.amplitude * Math.sin(
-                    (2 * Math.PI * ((timestamp + b.phase) % b.period)) / b.period
+                breathOffset = -idle.breath.amplitude * Math.sin(
+                    (2 * Math.PI * ((timestamp + idle.breath.phase) % idle.breath.period)) / idle.breath.period
                 );
             }
 
+            // horizontal drift, accumulate over time
+            if (delta !== undefined) {
+                driftX[i - 1] += idle.drift.speed * idle.drift.direction * (delta / 1000);
+                // wrap so it doesn't grow forever
+                driftX[i - 1] = driftX[i - 1] % 200;
+            }
+
             path.setAttribute('d',
-                buildWavePath(peakX, crestY, 1000, offsets[i - 1], movementOffset)
+                buildWavePath(peakX, crestY, 1000, layerOffsets[i - 1], breathOffset, driftX[i - 1])
             );
         }
     }
 
-    /* main loop — runs continuously */
+    /* main RAF loop */
     function loop(timestamp) {
+        const delta = lastTimestamp !== null ? timestamp - lastTimestamp : 0;
+        lastTimestamp = timestamp;
+
         if (travelling) {
             if (!animStart) animStart = timestamp;
             const elapsed  = timestamp - animStart;
@@ -98,11 +139,11 @@
             if (progress >= 1) travelling = false;
         }
 
-        drawWave(currentPeakX, currentCrestY, timestamp);
+        drawWave(currentPeakX, currentCrestY, timestamp, delta);
         rafId = requestAnimationFrame(loop);
     }
 
-    /* trigger travel to a new position */
+    /* trigger travel */
     function travelTo(peakX, crestY) {
         fromPeakX    = currentPeakX;
         fromCrestY   = currentCrestY;
@@ -123,7 +164,7 @@
         return (centreX / stageRect.width) * 1000;
     }
 
-    /* build Object Model */
+    /*  build DOM  */
     function buildWaveStage() {
         const nav = document.querySelector('.bottom-nav');
         if (!nav) return;
@@ -152,7 +193,7 @@
         nav.appendChild(btnWrapper);
     }
 
-    /* public: called by swipe.js */
+    /*  public  */
     function setActive(index) {
         document.querySelectorAll('.nav-btn').forEach((btn, i) => {
             btn.classList.toggle('active', i === index);
@@ -160,9 +201,9 @@
         travelTo(getPeakX(index), PEAK_H);
     }
 
-    window.setWaveAmplitude = setActive;
+    window.setWaveSwell = setActive;
 
-    /* init */
+    /*  init  */
     document.addEventListener('DOMContentLoaded', () => {
         buildWaveStage();
         requestAnimationFrame(() => {
@@ -175,9 +216,7 @@
     window.addEventListener('resize', () => {
         const btns = [...document.querySelectorAll('.nav-btn')];
         const idx  = btns.findIndex(b => b.classList.contains('active'));
-        if (idx >= 0) {
-            currentPeakX = getPeakX(idx);
-        }
+        if (idx >= 0) currentPeakX = getPeakX(idx);
     });
 
 })();
