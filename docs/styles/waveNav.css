@@ -41,12 +41,12 @@
     display: block;
 }
 
-/* back layer — darkest, most transparent */
-.wave-svg-1 { fill: rgba(255, 0, 0, 1); }
+/* back layer */
+.wave-svg-1 { fill: rgba(123, 216, 203, .8); }
 /* mid layer */
-.wave-svg-2 { fill: rgba(0, 255, 0, 1); }
-/* front layer — most opaque */
-.wave-svg-3 { fill: rgba(0, 0, 255, 1); }
+.wave-svg-2 { fill: rgba(125, 191, 210, .7); }
+/* front layer */
+.wave-svg-3 { fill: rgba(126, 166, 216, .6); }
 
 /* button wrapper sits above wave */
 .nav-buttons {
