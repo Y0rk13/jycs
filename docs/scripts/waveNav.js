@@ -197,6 +197,7 @@
         travelTo(getPeakX(index), PEAK_H);
     }
 
+    window.setWaveAmplitude = setActive;
     window.setWaveSwell = setActive;
 
     /*  init  */
