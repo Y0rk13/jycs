@@ -1,0 +1,153 @@
+/* RESUME SECTION SS*/
+
+.section-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+
+.section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+
+/* two-column layout */
+.resume-layout {
+    display: flex;
+    gap: 6vw;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 960px;
+}
+
+/*  left: achievements  */
+.resume-achievements {
+    flex: 1 1 55%;
+}
+
+.achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.achievement {
+    border-left: 2px solid currentColor;
+    padding-left: 1.2rem;
+    opacity: 0.9;
+}
+
+.achievement-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    opacity: 0.6;
+}
+
+.achievement-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.achievement-sub {
+    font-size: 0.8rem;
+    opacity: 0.55;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-body {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    opacity: 0.75;
+    font-weight: 300;
+}
+
+/*  right: PDF download card  */
+.resume-download {
+    flex: 0 0 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resume-download-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1.5rem;
+    border: 1px solid currentColor;
+    border-radius: 16px;
+    opacity: 0.85;
+    text-align: center;
+    width: 100%;
+}
+
+.resume-pdf-icon {
+    width: 40px;
+    height: 40px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.7;
+}
+
+.resume-download-label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.resume-download-sub {
+    font-size: 0.72rem;
+    opacity: 0.5;
+    margin-bottom: 0.5rem;
+}
+
+.resume-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid currentColor;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    transition: opacity 0.2s;
+}
+
+.resume-download-btn:hover {
+    opacity: 0.7;
+}
+
+.resume-download-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/*  responsive  */
+@media (max-width: 640px) {
+    .resume-layout {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .resume-download {
+        flex: unset;
+        width: 100%;
+    }
+}
