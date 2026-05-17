@@ -5,10 +5,10 @@
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
-    margin-top: 2rem;
     overflow-x: auto;
     padding-bottom: 0.5rem;
-    scrollbar-width: none; /* hide scrollbar but keep scroll */
+    /* hide scrollbar but keep scroll */
+    scrollbar-width: none;
 }
 .projects-grid::-webkit-scrollbar { display: none; }
 
@@ -16,20 +16,21 @@
 .project-card {
     display: flex;
     flex-direction: column;
-    flex: 0 0 300px;          /* fixed width, add more cards and they scroll */
+    flex: 0 0 300px;
+    max-height: calc(100vh - var(--nav-h) - 10rem);
     border: 1px solid currentColor;
     border-radius: 14px;
-    overflow: hidden;
+    overflow: hidden;        /* clip the image to rounded corners */
     opacity: 0.9;
     transition: opacity 0.2s;
 }
 
 .project-card:hover { opacity: 1; }
 
-/* image slot */
+/* image pinned, scales with available height */
 .card-image {
     width: 100%;
-    height: 160px;
+    flex: 0 0 clamp(80px, 25%, 180px); /* scales between 80px and 180px */
     overflow: hidden;
     border-bottom: 1px solid currentColor;
 }
@@ -40,6 +41,20 @@
     object-fit: cover;
     display: block;
 }
+
+/* scrollable content area (body + footer) */
+.card-scroll {
+    flex: 1;
+    min-height: 0;           /* critical flex shrink fix */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: currentColor transparent;
+}
+
+.card-scroll::-webkit-scrollbar { width: 3px; }
+.card-scroll::-webkit-scrollbar-thumb { background: currentColor; border-radius: 2px; }
 
 /* body */
 .card-body {
