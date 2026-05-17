@@ -11,7 +11,7 @@
 .section-title {
     font-size: clamp(1.8rem, 3.5vw, 2.8rem);
     line-height: 1.1;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 /* two-column layout */
